@@ -215,7 +215,8 @@ async def settings_update(request: Request):
     # Handle unchecked checkboxes
     checkboxes = [
         "DYNADOT_ENABLED", "DYNADOT_IT_CONTACT_CONFIRMED",
-        "OPENPROVIDER_ENABLED", "OPENPROVIDER_IT_CONTACTS_VERIFIED"
+        "OPENPROVIDER_ENABLED", "OPENPROVIDER_IT_CONTACTS_VERIFIED",
+        "GANDI_ENABLED", "GANDI_IT_CONTACT_CONFIRMED"
     ]
     for cb in checkboxes:
         if cb not in form_data:

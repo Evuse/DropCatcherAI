@@ -64,6 +64,23 @@ def get_static_providers_health() -> Dict[str, ProviderHealth]:
         
     health["openprovider"] = ProviderHealth(ready=op_ready, message=op_msg, details=op_details)
     
+    # Gandi
+    gandi_ready = True
+    gandi_details = {}
+    gandi_msg = "Ready"
+    
+    if not settings.GANDI_ENABLED:
+        gandi_ready = False
+        gandi_msg = "Disabled"
+    elif not settings.GANDI_API_KEY:
+        gandi_ready = False
+        gandi_msg = "Missing API key"
+    elif not settings.GANDI_IT_CONTACT_CONFIRMED:
+        gandi_ready = False
+        gandi_msg = "IT Contact not confirmed in settings"
+        
+    health["gandi"] = ProviderHealth(ready=gandi_ready, message=gandi_msg, details=gandi_details)
+    
     return health
 
 def preflight_providers_for_domain(domain: str) -> Dict[str, ProviderHealth]:

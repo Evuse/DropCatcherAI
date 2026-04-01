@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     OPENPROVIDER_IT_CONTACTS_VERIFIED: bool = False
     OPENPROVIDER_IT_ADDITIONAL_DATA_JSON: str = "{}"
 
+    GANDI_ENABLED: bool = False
+    GANDI_API_KEY: str = ""
+    GANDI_ORGANIZATION_ID: str = ""
+    GANDI_IT_CONTACT_CONFIRMED: bool = False
+
     model_config = SettingsConfigDict(
         env_file=get_env_path(), 
         env_file_encoding='utf-8',

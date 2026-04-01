@@ -80,6 +80,24 @@
             <textarea name="OPENPROVIDER_IT_ADDITIONAL_DATA_JSON" class="form-control" rows="4">{{ settings.OPENPROVIDER_IT_ADDITIONAL_DATA_JSON }}</textarea>
         </div>
 
+        <h3 class="settings-section-title">Gandi</h3>
+        <div class="checkbox-row">
+            <input type="checkbox" name="GANDI_ENABLED" id="gandi_enabled" {% if settings.GANDI_ENABLED %}checked{% endif %}>
+            <label for="gandi_enabled" style="margin-bottom: 0;">Abilita Gandi</label>
+        </div>
+        <div class="form-group">
+            <label>API Key (Personal Access Token)</label>
+            <input type="password" name="GANDI_API_KEY" class="form-control" value="{{ settings.GANDI_API_KEY }}">
+        </div>
+        <div class="form-group">
+            <label>Organization ID (Opzionale, usa Sharing-Id se presente)</label>
+            <input type="text" name="GANDI_ORGANIZATION_ID" class="form-control" value="{{ settings.GANDI_ORGANIZATION_ID }}">
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" name="GANDI_IT_CONTACT_CONFIRMED" id="gandi_contact" {% if settings.GANDI_IT_CONTACT_CONFIRMED %}checked{% endif %}>
+            <label for="gandi_contact" style="margin-bottom: 0;">IT Contact Confirmed (Account verificato per .it)</label>
+        </div>
+
         <div style="margin-top: 30px;">
             <button type="submit" class="btn btn-primary">Salva nel .env</button>
             <p style="margin-top: 10px; font-size: 0.85rem; opacity: 0.7;">Nota: Potrebbe essere necessario riavviare l'app per applicare tutte le modifiche.</p>
