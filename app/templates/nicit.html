@@ -3,26 +3,45 @@
 {% block title %}NIC.IT Liste Drop{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h3>Download Liste</h3>
-    <form action="/nicit/download" method="post" style="margin-top: 15px; display: flex; gap: 15px; align-items: flex-end;">
-        <div class="form-group" style="margin-bottom: 0;">
-            <label>Data</label>
-            <input type="date" name="date_str" class="form-control" required>
-        </div>
-        <div class="form-group" style="margin-bottom: 0;">
-            <label>Slot</label>
-            <select name="slot" class="form-control">
-                <option value="09">09:00</option>
-                <option value="16">16:00</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Scarica Singolo</button>
-    </form>
+<div class="grid-2" style="margin-bottom: 20px;">
+    <!-- Card Principale: Download Oggi Unito -->
+    <div class="card premium-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 20px; margin-bottom: 0;">
+        <h3 style="margin-bottom: 15px; font-size: 1.5rem;">Lista Unita di Oggi</h3>
+        <p style="margin-bottom: 25px; opacity: 0.8; max-width: 80%;">Scarica automaticamente le liste delle 09:00 e delle 16:00 di oggi, uniscile rimuovendo i duplicati e ordinale per lunghezza del dominio.</p>
+        <form action="/nicit/download-today-merged" method="post">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);">
+                Scarica e Unisci Oggi
+            </button>
+        </form>
+    </div>
+
+    <!-- Card Secondaria: Download Singolo -->
+    <div class="card" style="display: flex; flex-direction: column; justify-content: center; margin-bottom: 0;">
+        <h3 style="margin-bottom: 15px;">Download Singolo Slot</h3>
+        <form action="/nicit/download" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Data</label>
+                <input type="date" name="date_str" class="form-control" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Slot</label>
+                <select name="slot" class="form-control">
+                    <option value="09">09:00</option>
+                    <option value="16">16:00</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-ghost" style="align-self: flex-start;">Scarica Singolo</button>
+        </form>
+    </div>
 </div>
 
 <div class="card">
-    <h3>File Scaricati</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0;">File Scaricati</h3>
+        <form action="/nicit/open-folder" method="post" style="margin: 0;">
+            <button type="submit" class="btn btn-ghost">Apri Cartella Download</button>
+        </form>
+    </div>
     <table>
         <thead>
             <tr>
@@ -34,14 +53,19 @@
         <tbody>
             {% for file in files %}
             <tr>
-                <td>{{ file.filename }}</td>
-                <td>{{ file.size }}</td>
-                <td>{{ file.downloaded_at }}</td>
+                <td>
+                    {% if 'merged' in file.filename %}
+                        <span class="badge primary" style="margin-right: 8px;">MERGED</span>
+                    {% endif %}
+                    <strong>{{ file.filename }}</strong>
+                </td>
+                <td>{{ "{:,}".format(file.size) }}</td>
+                <td>{{ file.downloaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
             </tr>
             {% endfor %}
             {% if not files %}
             <tr>
-                <td colspan="3" style="text-align: center; opacity: 0.5;">Nessun file scaricato.</td>
+                <td colspan="3" style="text-align: center; opacity: 0.5; padding: 30px;">Nessun file scaricato.</td>
             </tr>
             {% endif %}
         </tbody>

@@ -171,6 +171,18 @@ async def nicit_download(date_str: str = Form(...), slot: str = Form(...)):
     await service.download_file(formatted_date, slot)
     return RedirectResponse(url="/nicit", status_code=303)
 
+@router.post("/nicit/download-today-merged")
+async def nicit_download_today_merged():
+    service = NicitService()
+    await service.download_and_merge_today()
+    return RedirectResponse(url="/nicit", status_code=303)
+
+@router.post("/nicit/open-folder")
+async def nicit_open_folder():
+    service = NicitService()
+    service.open_download_folder()
+    return RedirectResponse(url="/nicit", status_code=303)
+
 @router.get("/settings", response_class=HTMLResponse)
 async def settings_page(request: Request):
     return templates.TemplateResponse("settings.html", {
