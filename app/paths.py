@@ -33,6 +33,6 @@ def bootstrap_runtime():
     env_path = get_env_path()
     
     if is_frozen():
-        template_path = os.path.join(get_base_dir(), ".env.template")
+        template_path = os.path.join(get_base_dir(), ".env.example")
         if not os.path.exists(env_path) and os.path.exists(template_path):
             shutil.copy(template_path, env_path)
