@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Provider Preflight{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form action="/preflight" method="get" style="display: flex; gap: 15px; align-items: flex-end;">
+        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+            <label>FQDN Dominio</label>
+            <input type="text" name="domain" class="form-control" value="{{ domain }}" placeholder="es. example.it">
+        </div>
+        <button type="submit" class="btn btn-primary">Esegui Preflight</button>
+    </form>
+</div>
+
+{% if domain %}
+<div class="card">
+    <h3>Risultati Preflight per: {{ domain }}</h3>
+    <div style="margin-top: 20px;">
+        {% for provider, status in health.items() %}
+        <div class="provider-health" style="padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong style="font-size: 1.2rem; text-transform: capitalize;">{{ provider }}</strong>
+                {% if status.ready %}
+                    <span class="badge success" style="font-size: 1rem;">READY</span>
+                {% else %}
+                    <span class="badge danger" style="font-size: 1rem;">NOT READY</span>
+                {% endif %}
+            </div>
+            <p><strong>Messaggio:</strong> {{ status.message }}</p>
+            {% if status.details %}
+            <div style="margin-top: 10px; padding: 10px; background-color: var(--bg-color); border-radius: 4px;">
+                <pre style="margin: 0; font-size: 0.85rem;">{{ status.details | tojson(indent=2) }}</pre>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

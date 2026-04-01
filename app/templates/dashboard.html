@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid-3">
+    <div class="card premium-card">
+        <h3>Domini</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin-top: 10px;">{{ domains_count }}</p>
+    </div>
+    <div class="card premium-card">
+        <h3>Campagne</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin-top: 10px;">{{ campaigns_count }}</p>
+    </div>
+    <div class="card premium-card">
+        <h3>Tentativi</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin-top: 10px;">{{ attempts_count }}</p>
+    </div>
+</div>
+
+<div class="grid-3" style="margin-top: 20px;">
+    <div class="card">
+        <h4>Campagne in Esecuzione</h4>
+        <p class="badge primary" style="margin-top: 10px; font-size: 1.2rem;">{{ running_campaigns }}</p>
+    </div>
+    <div class="card">
+        <h4>Campagne Vinte</h4>
+        <p class="badge success" style="margin-top: 10px; font-size: 1.2rem;">{{ success_campaigns }}</p>
+    </div>
+    <div class="card">
+        <h4>Campagne Perse</h4>
+        <p class="badge danger" style="margin-top: 10px; font-size: 1.2rem;">{{ lost_campaigns }}</p>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+    <h3>Ultimi Domini</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>FQDN</th>
+                <th>Stato</th>
+                <th>Drop Previsto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for domain in recent_domains %}
+            <tr>
+                <td>{{ domain.id }}</td>
+                <td>{{ domain.fqdn }}</td>
+                <td><span class="badge ghost">{{ domain.status }}</span></td>
+                <td>{{ domain.expected_drop_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

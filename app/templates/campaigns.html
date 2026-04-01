@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Campagne{% endblock %}
+
+{% block content %}
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Domain ID</th>
+                <th>Stato</th>
+                <th>Inizio</th>
+                <th>Fine</th>
+                <th>Winner</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in campaigns %}
+            <tr>
+                <td>{{ campaign.id }}</td>
+                <td>{{ campaign.domain_id }}</td>
+                <td>
+                    {% if campaign.status == 'SUCCESS' %}
+                        <span class="badge success">{{ campaign.status }}</span>
+                    {% elif campaign.status == 'LOST' %}
+                        <span class="badge danger">{{ campaign.status }}</span>
+                    {% else %}
+                        <span class="badge primary">{{ campaign.status }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ campaign.started_at }}</td>
+                <td>{{ campaign.ended_at or '-' }}</td>
+                <td>{{ campaign.winner_registrar or '-' }}</td>
+                <td>{{ campaign.notes or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

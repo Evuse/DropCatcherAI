@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Tentativi (Ultimi 100){% endblock %}
+
+{% block content %}
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Campagna</th>
+                <th>Registrar</th>
+                <th>Timestamp</th>
+                <th>Esito</th>
+                <th>Latenza (ms)</th>
+                <th>Messaggio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in attempts %}
+            <tr>
+                <td>{{ attempt.id }}</td>
+                <td>{{ attempt.campaign_id }}</td>
+                <td>{{ attempt.registrar_name }}</td>
+                <td>{{ attempt.attempted_at }}</td>
+                <td>
+                    {% if attempt.success %}
+                        <span class="badge success">OK</span>
+                    {% else %}
+                        <span class="badge danger">KO</span>
+                    {% endif %}
+                </td>
+                <td>{{ attempt.latency_ms }}</td>
+                <td>{{ attempt.message }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

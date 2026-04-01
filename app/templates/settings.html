@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="card">
+    <form action="/settings" method="post">
+        
+        <h3 class="settings-section-title" style="margin-top: 0;">App / Runtime</h3>
+        <div class="form-group">
+            <label>APP_NAME</label>
+            <input type="text" name="APP_NAME" class="form-control" value="{{ settings.APP_NAME }}">
+        </div>
+        <div class="form-group">
+            <label>DEFAULT_AUTO_START_WINDOW_SECONDS</label>
+            <input type="number" name="DEFAULT_AUTO_START_WINDOW_SECONDS" class="form-control" value="{{ settings.DEFAULT_AUTO_START_WINDOW_SECONDS }}">
+        </div>
+
+        <h3 class="settings-section-title">Dynadot</h3>
+        <div class="checkbox-row">
+            <input type="checkbox" name="DYNADOT_ENABLED" id="dyn_enabled" {% if settings.DYNADOT_ENABLED %}checked{% endif %}>
+            <label for="dyn_enabled" style="margin-bottom: 0;">Abilita Dynadot</label>
+        </div>
+        <div class="form-group">
+            <label>API Key</label>
+            <input type="text" name="DYNADOT_API_KEY" class="form-control" value="{{ settings.DYNADOT_API_KEY }}">
+        </div>
+        <div class="form-group">
+            <label>API Secret</label>
+            <input type="password" name="DYNADOT_API_SECRET" class="form-control" value="{{ settings.DYNADOT_API_SECRET }}">
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" name="DYNADOT_IT_CONTACT_CONFIRMED" id="dyn_contact" {% if settings.DYNADOT_IT_CONTACT_CONFIRMED %}checked{% endif %}>
+            <label for="dyn_contact" style="margin-bottom: 0;">IT Contact Confirmed</label>
+        </div>
+        <div class="form-group">
+            <label>Country Code</label>
+            <input type="text" name="DYNADOT_IT_CONTACT_COUNTRY_CODE" class="form-control" value="{{ settings.DYNADOT_IT_CONTACT_COUNTRY_CODE }}">
+        </div>
+        <div class="form-group">
+            <label>Province Code</label>
+            <input type="text" name="DYNADOT_IT_CONTACT_PROVINCE_CODE" class="form-control" value="{{ settings.DYNADOT_IT_CONTACT_PROVINCE_CODE }}">
+        </div>
+
+        <h3 class="settings-section-title">Openprovider</h3>
+        <div class="checkbox-row">
+            <input type="checkbox" name="OPENPROVIDER_ENABLED" id="op_enabled" {% if settings.OPENPROVIDER_ENABLED %}checked{% endif %}>
+            <label for="op_enabled" style="margin-bottom: 0;">Abilita Openprovider</label>
+        </div>
+        <div class="form-group">
+            <label>API Token</label>
+            <input type="password" name="OPENPROVIDER_API_TOKEN" class="form-control" value="{{ settings.OPENPROVIDER_API_TOKEN }}">
+        </div>
+        <div class="form-group">
+            <label>Owner Handle</label>
+            <input type="text" name="OPENPROVIDER_OWNER_HANDLE" class="form-control" value="{{ settings.OPENPROVIDER_OWNER_HANDLE }}">
+        </div>
+        <div class="form-group">
+            <label>Admin Handle</label>
+            <input type="text" name="OPENPROVIDER_ADMIN_HANDLE" class="form-control" value="{{ settings.OPENPROVIDER_ADMIN_HANDLE }}">
+        </div>
+        <div class="form-group">
+            <label>Tech Handle</label>
+            <input type="text" name="OPENPROVIDER_TECH_HANDLE" class="form-control" value="{{ settings.OPENPROVIDER_TECH_HANDLE }}">
+        </div>
+        <div class="form-group">
+            <label>Billing Handle</label>
+            <input type="text" name="OPENPROVIDER_BILLING_HANDLE" class="form-control" value="{{ settings.OPENPROVIDER_BILLING_HANDLE }}">
+        </div>
+        <div class="form-group">
+            <label>Nameserver Group</label>
+            <input type="text" name="OPENPROVIDER_NAMESERVER_GROUP" class="form-control" value="{{ settings.OPENPROVIDER_NAMESERVER_GROUP }}">
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" name="OPENPROVIDER_IT_CONTACTS_VERIFIED" id="op_contact" {% if settings.OPENPROVIDER_IT_CONTACTS_VERIFIED %}checked{% endif %}>
+            <label for="op_contact" style="margin-bottom: 0;">IT Contacts Verified</label>
+        </div>
+        <div class="form-group">
+            <label>Additional Data JSON</label>
+            <textarea name="OPENPROVIDER_IT_ADDITIONAL_DATA_JSON" class="form-control" rows="4">{{ settings.OPENPROVIDER_IT_ADDITIONAL_DATA_JSON }}</textarea>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn btn-primary">Salva nel .env</button>
+            <p style="margin-top: 10px; font-size: 0.85rem; opacity: 0.7;">Nota: Potrebbe essere necessario riavviare l'app per applicare tutte le modifiche.</p>
+        </div>
+    </form>
+</div>
+{% endblock %}

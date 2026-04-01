@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}NIC.IT Liste Drop{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h3>Download Liste</h3>
+    <form action="/nicit/download" method="post" style="margin-top: 15px; display: flex; gap: 15px; align-items: flex-end;">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label>Data</label>
+            <input type="date" name="date_str" class="form-control" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label>Slot</label>
+            <select name="slot" class="form-control">
+                <option value="09">09:00</option>
+                <option value="16">16:00</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Scarica Singolo</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>File Scaricati</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome File</th>
+                <th>Dimensione (bytes)</th>
+                <th>Scaricato il</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>{{ file.filename }}</td>
+                <td>{{ file.size }}</td>
+                <td>{{ file.downloaded_at }}</td>
+            </tr>
+            {% endfor %}
+            {% if not files %}
+            <tr>
+                <td colspan="3" style="text-align: center; opacity: 0.5;">Nessun file scaricato.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

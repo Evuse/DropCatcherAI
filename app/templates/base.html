@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DropCatcher</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-title">DropCatcher</div>
+            <nav>
+                <ul>
+                    <li><a href="/">Dashboard</a></li>
+                    <li><a href="/domains">Domini</a></li>
+                    <li><a href="/campaigns">Campagne</a></li>
+                    <li><a href="/attempts">Tentativi</a></li>
+                    <li><a href="/nicit">NIC.IT</a></li>
+                    <li><a href="/preflight">Provider Preflight</a></li>
+                    <li><a href="/settings">Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main">
+            <header class="topbar">
+                <h2>{% block title %}DropCatcher{% endblock %}</h2>
+                <div>
+                    <button class="btn btn-ghost theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+                </div>
+            </header>
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+    </script>
+</body>
+</html>
