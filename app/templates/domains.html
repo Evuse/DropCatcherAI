@@ -1,74 +1,107 @@
 {% extends "base.html" %}
 
-{% block title %}Domini{% endblock %}
+{% block title %}Gestione Domini{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h3>Aggiungi Dominio</h3>
-    <form action="/domains/create" method="post" style="margin-top: 15px;">
-        <div class="form-group">
-            <label>FQDN (es. example.it)</label>
-            <input type="text" name="fqdn" class="form-control" required>
+<div class="grid-2">
+    <div class="card" style="align-self: start;">
+        <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="plus-circle" style="color: var(--primary);"></i>
+            <h3 style="margin: 0;">Aggiungi Dominio</h3>
         </div>
-        <div class="form-group">
-            <label>Data/Ora Drop Previsto</label>
-            <input type="datetime-local" name="expected_drop_at" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label>Auto Start Window (secondi)</label>
-            <input type="number" name="auto_start_window_seconds" class="form-control" value="60" required>
-        </div>
-        <div class="form-group">
-            <label>Burst Duration (secondi)</label>
-            <input type="number" name="burst_duration_seconds" class="form-control" value="120" required>
-        </div>
-        <div class="form-group">
-            <label>Intervallo (ms)</label>
-            <input type="number" name="interval_ms" class="form-control" value="500" required>
-        </div>
-        <div class="form-group">
-            <label>Provider Selezionati</label>
-            {% for provider in available_providers %}
-            <div class="checkbox-row">
-                <input type="checkbox" name="providers" value="{{ provider }}" id="prov_{{ provider }}">
-                <label for="prov_{{ provider }}" style="margin-bottom: 0;">{{ provider }}</label>
+        <form action="/domains/create" method="post">
+            <div class="form-group">
+                <label>FQDN (es. example.it)</label>
+                <input type="text" name="fqdn" class="form-control mono" placeholder="example.it" required>
             </div>
-            {% endfor %}
-        </div>
-        <button type="submit" class="btn btn-primary">Aggiungi Dominio</button>
-    </form>
-</div>
+            <div class="form-group">
+                <label>Data/Ora Drop Previsto</label>
+                <input type="datetime-local" name="expected_drop_at" class="form-control mono" required>
+            </div>
+            <div class="grid-2" style="gap: 16px;">
+                <div class="form-group">
+                    <label>Auto Start Window (sec)</label>
+                    <input type="number" name="auto_start_window_seconds" class="form-control mono" value="60" required>
+                </div>
+                <div class="form-group">
+                    <label>Burst Duration (sec)</label>
+                    <input type="number" name="burst_duration_seconds" class="form-control mono" value="120" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Intervallo (ms)</label>
+                <input type="number" name="interval_ms" class="form-control mono" value="500" required>
+            </div>
+            <div class="form-group">
+                <label>Provider Selezionati</label>
+                <div style="background: var(--ghost-hover); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--card-border);">
+                    {% for provider in available_providers %}
+                    <div class="checkbox-row" style="margin-bottom: {% if loop.last %}0{% else %}12px{% endif %};">
+                        <input type="checkbox" name="providers" value="{{ provider }}" id="prov_{{ provider }}">
+                        <label for="prov_{{ provider }}" style="text-transform: capitalize;">{{ provider }}</label>
+                    </div>
+                    {% else %}
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Nessun provider configurato.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i data-lucide="save"></i> Salva Dominio
+            </button>
+        </form>
+    </div>
 
-<div class="card">
-    <h3>Lista Domini</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>FQDN</th>
-                <th>Stato</th>
-                <th>Drop Previsto</th>
-                <th>Provider</th>
-                <th>Azioni</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for domain in domains %}
-            <tr>
-                <td>{{ domain.id }}</td>
-                <td>{{ domain.fqdn }}</td>
-                <td><span class="badge ghost">{{ domain.status }}</span></td>
-                <td>{{ domain.expected_drop_at }}</td>
-                <td>{{ domain.selected_providers }}</td>
-                <td>
-                    <a href="/domains/{{ domain.id }}/edit" class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;">Modifica</a>
-                    <form action="/domains/{{ domain.id }}/start" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-primary" style="padding: 4px 8px; font-size: 0.8rem;">Start Now</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="card" style="padding: 0; overflow: hidden; align-self: start;">
+        <div style="padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--card-border);">
+            <div class="flex items-center gap-2">
+                <i data-lucide="list" style="color: var(--primary);"></i>
+                <h3 style="margin: 0;">Lista Domini</h3>
+            </div>
+        </div>
+        <div class="table-container" style="border: none; border-radius: 0;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>FQDN</th>
+                        <th>Stato</th>
+                        <th>Drop Previsto</th>
+                        <th class="text-right">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for domain in domains %}
+                    <tr>
+                        <td>
+                            <div class="mono" style="font-weight: 600;">{{ domain.fqdn }}</div>
+                            <div class="mono" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">ID: #{{ domain.id }} | {{ domain.selected_providers }}</div>
+                        </td>
+                        <td>
+                            <span class="badge {% if domain.status == 'SUCCESS' %}success{% elif domain.status == 'LOST' %}danger{% elif domain.status == 'RUNNING' %}primary{% else %}ghost{% endif %}">
+                                {{ domain.status }}
+                            </span>
+                        </td>
+                        <td class="mono" style="font-size: 0.85rem;">{{ domain.expected_drop_at }}</td>
+                        <td class="text-right">
+                            <div class="flex items-center" style="justify-content: flex-end; gap: 8px;">
+                                <a href="/domains/{{ domain.id }}/edit" class="btn btn-ghost" style="padding: 6px; border-radius: 6px;" title="Modifica">
+                                    <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                                </a>
+                                <form action="/domains/{{ domain.id }}/start" method="post" style="margin: 0;">
+                                    <button type="submit" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px;" title="Avvia Subito">
+                                        <i data-lucide="play" style="width: 14px; height: 14px;"></i> Start
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 32px; color: var(--text-muted);">Nessun dominio presente.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

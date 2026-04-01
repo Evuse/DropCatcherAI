@@ -5,55 +5,76 @@
 {% block content %}
 <div class="grid-3">
     <div class="card premium-card">
-        <h3>Domini</h3>
-        <p style="font-size: 2rem; font-weight: bold; margin-top: 10px;">{{ domains_count }}</p>
+        <div class="flex items-center gap-2">
+            <i data-lucide="globe" style="color: var(--primary);"></i>
+            <h3 style="margin: 0;">Domini</h3>
+        </div>
+        <p class="mono" style="font-size: 2.5rem; font-weight: 700; margin-top: 16px; color: var(--text-color);">{{ domains_count }}</p>
     </div>
     <div class="card premium-card">
-        <h3>Campagne</h3>
-        <p style="font-size: 2rem; font-weight: bold; margin-top: 10px;">{{ campaigns_count }}</p>
+        <div class="flex items-center gap-2">
+            <i data-lucide="rocket" style="color: var(--primary);"></i>
+            <h3 style="margin: 0;">Campagne</h3>
+        </div>
+        <p class="mono" style="font-size: 2.5rem; font-weight: 700; margin-top: 16px; color: var(--text-color);">{{ campaigns_count }}</p>
     </div>
     <div class="card premium-card">
-        <h3>Tentativi</h3>
-        <p style="font-size: 2rem; font-weight: bold; margin-top: 10px;">{{ attempts_count }}</p>
+        <div class="flex items-center gap-2">
+            <i data-lucide="activity" style="color: var(--primary);"></i>
+            <h3 style="margin: 0;">Tentativi</h3>
+        </div>
+        <p class="mono" style="font-size: 2.5rem; font-weight: 700; margin-top: 16px; color: var(--text-color);">{{ attempts_count }}</p>
     </div>
 </div>
 
-<div class="grid-3" style="margin-top: 20px;">
+<div class="grid-3" style="margin-top: 24px;">
     <div class="card">
-        <h4>Campagne in Esecuzione</h4>
-        <p class="badge primary" style="margin-top: 10px; font-size: 1.2rem;">{{ running_campaigns }}</p>
+        <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">In Esecuzione</h4>
+        <p class="badge primary mono" style="margin-top: 12px; font-size: 1.2rem; padding: 6px 16px;">{{ running_campaigns }}</p>
     </div>
     <div class="card">
-        <h4>Campagne Vinte</h4>
-        <p class="badge success" style="margin-top: 10px; font-size: 1.2rem;">{{ success_campaigns }}</p>
+        <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Vinte</h4>
+        <p class="badge success mono" style="margin-top: 12px; font-size: 1.2rem; padding: 6px 16px;">{{ success_campaigns }}</p>
     </div>
     <div class="card">
-        <h4>Campagne Perse</h4>
-        <p class="badge danger" style="margin-top: 10px; font-size: 1.2rem;">{{ lost_campaigns }}</p>
+        <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Perse</h4>
+        <p class="badge danger mono" style="margin-top: 12px; font-size: 1.2rem; padding: 6px 16px;">{{ lost_campaigns }}</p>
     </div>
 </div>
 
-<div class="card" style="margin-top: 20px;">
-    <h3>Ultimi Domini</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>FQDN</th>
-                <th>Stato</th>
-                <th>Drop Previsto</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for domain in recent_domains %}
-            <tr>
-                <td>{{ domain.id }}</td>
-                <td>{{ domain.fqdn }}</td>
-                <td><span class="badge ghost">{{ domain.status }}</span></td>
-                <td>{{ domain.expected_drop_at }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="card" style="margin-top: 24px; padding: 0; overflow: hidden;">
+    <div style="padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--card-border);">
+        <h3 style="margin: 0;">Ultimi Domini Inseriti</h3>
+    </div>
+    <div class="table-container" style="border: none; border-radius: 0;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>FQDN</th>
+                    <th>Stato</th>
+                    <th>Drop Previsto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for domain in recent_domains %}
+                <tr>
+                    <td class="mono" style="color: var(--text-muted);">#{{ domain.id }}</td>
+                    <td class="mono" style="font-weight: 600;">{{ domain.fqdn }}</td>
+                    <td>
+                        <span class="badge {% if domain.status == 'SUCCESS' %}success{% elif domain.status == 'LOST' %}danger{% elif domain.status == 'RUNNING' %}primary{% else %}ghost{% endif %}">
+                            {{ domain.status }}
+                        </span>
+                    </td>
+                    <td class="mono" style="font-size: 0.85rem;">{{ domain.expected_drop_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 32px; color: var(--text-muted);">Nessun dominio presente.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

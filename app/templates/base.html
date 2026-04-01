@@ -5,49 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DropCatcher</title>
     <link rel="stylesheet" href="/static/style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="app-shell">
         <aside class="sidebar">
-            <div class="sidebar-title">DropCatcher</div>
+            <div class="sidebar-title">
+                <i data-lucide="crosshair" class="logo-icon"></i>
+                <span>DropCatcher</span>
+            </div>
             <nav>
                 <ul>
-                    <li><a href="/">Dashboard</a></li>
-                    <li><a href="/domains">Domini</a></li>
-                    <li><a href="/campaigns">Campagne</a></li>
-                    <li><a href="/attempts">Tentativi</a></li>
-                    <li><a href="/nicit">NIC.IT</a></li>
-                    <li><a href="/preflight">Provider Preflight</a></li>
-                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="/"><i data-lucide="layout-dashboard"></i> Dashboard</a></li>
+                    <li><a href="/domains"><i data-lucide="globe"></i> Domini</a></li>
+                    <li><a href="/campaigns"><i data-lucide="rocket"></i> Campagne</a></li>
+                    <li><a href="/attempts"><i data-lucide="activity"></i> Tentativi</a></li>
+                    <li><a href="/nicit"><i data-lucide="download-cloud"></i> NIC.IT</a></li>
+                    <li><a href="/preflight"><i data-lucide="shield-check"></i> Provider Preflight</a></li>
+                    <li><a href="/settings"><i data-lucide="settings"></i> Settings</a></li>
                 </ul>
             </nav>
         </aside>
         <main class="main">
             <header class="topbar">
                 <h2>{% block title %}DropCatcher{% endblock %}</h2>
-                <div>
-                    <button class="btn btn-ghost theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+                <div class="topbar-actions">
+                    <button class="btn btn-icon theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                        <i data-lucide="moon" class="dark-icon"></i>
+                        <i data-lucide="sun" class="light-icon"></i>
+                    </button>
                 </div>
             </header>
             <div class="content">
-                {% block content %}{% endblock %}
+                <div class="content-wrapper">
+                    {% block content %}{% endblock %}
+                </div>
             </div>
         </main>
     </div>
     <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
         }
         
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
+        function updateThemeIcon(theme) {
+            const darkIcon = document.querySelector('.dark-icon');
+            const lightIcon = document.querySelector('.light-icon');
+            if (theme === 'dark') {
+                darkIcon.style.display = 'none';
+                lightIcon.style.display = 'block';
+            } else {
+                darkIcon.style.display = 'block';
+                lightIcon.style.display = 'none';
+            }
         }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        // Wait for DOM to update icons
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcon(savedTheme);
+            
+            // Highlight active menu item
+            const currentPath = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.sidebar nav ul li a');
+            menuLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath || 
+                   (currentPath.startsWith(link.getAttribute('href')) && link.getAttribute('href') !== '/')) {
+                    link.classList.add('active');
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -3,72 +3,93 @@
 {% block title %}NIC.IT Liste Drop{% endblock %}
 
 {% block content %}
-<div class="grid-2" style="margin-bottom: 20px;">
+<div class="grid-2" style="margin-bottom: 24px;">
     <!-- Card Principale: Download Oggi Unito -->
-    <div class="card premium-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 20px; margin-bottom: 0;">
-        <h3 style="margin-bottom: 15px; font-size: 1.5rem;">Lista Unita di Oggi</h3>
-        <p style="margin-bottom: 25px; opacity: 0.8; max-width: 80%;">Scarica automaticamente le liste delle 09:00 e delle 16:00 di oggi, uniscile rimuovendo i duplicati e ordinale per lunghezza del dominio.</p>
+    <div class="card premium-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 48px 32px; margin-bottom: 0;">
+        <div style="background: var(--primary-glow); padding: 16px; border-radius: 50%; margin-bottom: 24px;">
+            <i data-lucide="layers" style="width: 32px; height: 32px; color: var(--primary);"></i>
+        </div>
+        <h3 style="margin-bottom: 12px; font-size: 1.5rem;">Lista Unita di Oggi</h3>
+        <p style="margin-bottom: 32px; color: var(--text-muted); max-width: 80%;">Scarica automaticamente le liste delle 09:00 e delle 16:00 di oggi, uniscile rimuovendo i duplicati e ordinale per lunghezza del dominio.</p>
         <form action="/nicit/download-today-merged" method="post">
-            <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px; box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);">
-                Scarica e Unisci Oggi
+            <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 14px 28px;">
+                <i data-lucide="download"></i> Scarica e Unisci Oggi
             </button>
         </form>
     </div>
 
     <!-- Card Secondaria: Download Singolo -->
     <div class="card" style="display: flex; flex-direction: column; justify-content: center; margin-bottom: 0;">
-        <h3 style="margin-bottom: 15px;">Download Singolo Slot</h3>
-        <form action="/nicit/download" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+        <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="file-down" style="color: var(--text-muted);"></i>
+            <h3 style="margin: 0;">Download Singolo Slot</h3>
+        </div>
+        <form action="/nicit/download" method="post" style="display: flex; flex-direction: column; gap: 20px;">
             <div class="form-group" style="margin-bottom: 0;">
                 <label>Data</label>
-                <input type="date" name="date_str" class="form-control" required>
+                <input type="date" name="date_str" class="form-control mono" required>
             </div>
             <div class="form-group" style="margin-bottom: 0;">
                 <label>Slot</label>
-                <select name="slot" class="form-control">
+                <select name="slot" class="form-control mono">
                     <option value="09">09:00</option>
                     <option value="16">16:00</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-ghost" style="align-self: flex-start;">Scarica Singolo</button>
+            <button type="submit" class="btn btn-ghost" style="align-self: flex-start; margin-top: 8px;">
+                <i data-lucide="download-cloud"></i> Scarica Singolo
+            </button>
         </form>
     </div>
 </div>
 
-<div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="margin: 0;">File Scaricati</h3>
+<div class="card" style="padding: 0; overflow: hidden;">
+    <div style="padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center;">
+        <div class="flex items-center gap-2">
+            <i data-lucide="folder-open" style="color: var(--primary);"></i>
+            <h3 style="margin: 0;">File Scaricati</h3>
+        </div>
         <form action="/nicit/open-folder" method="post" style="margin: 0;">
-            <button type="submit" class="btn btn-ghost">Apri Cartella Download</button>
+            <button type="submit" class="btn btn-ghost" style="padding: 8px 16px; font-size: 0.85rem;">
+                <i data-lucide="external-link"></i> Apri Cartella
+            </button>
         </form>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Nome File</th>
-                <th>Dimensione (bytes)</th>
-                <th>Scaricato il</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for file in files %}
-            <tr>
-                <td>
-                    {% if 'merged' in file.filename %}
-                        <span class="badge primary" style="margin-right: 8px;">MERGED</span>
-                    {% endif %}
-                    <strong>{{ file.filename }}</strong>
-                </td>
-                <td>{{ "{:,}".format(file.size) }}</td>
-                <td>{{ file.downloaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-            </tr>
-            {% endfor %}
-            {% if not files %}
-            <tr>
-                <td colspan="3" style="text-align: center; opacity: 0.5; padding: 30px;">Nessun file scaricato.</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+    <div class="table-container" style="border: none; border-radius: 0;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome File</th>
+                    <th class="text-right">Dimensione (bytes)</th>
+                    <th class="text-right">Scaricato il</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            {% if 'merged' in file.filename %}
+                                <span class="badge primary">MERGED</span>
+                            {% else %}
+                                <i data-lucide="file-text" style="color: var(--text-muted); width: 16px; height: 16px;"></i>
+                            {% endif %}
+                            <strong class="mono" style="font-weight: 600;">{{ file.filename }}</strong>
+                        </div>
+                    </td>
+                    <td class="mono text-right" style="color: var(--text-muted);">{{ "{:,}".format(file.size) }}</td>
+                    <td class="mono text-right" style="font-size: 0.85rem;">{{ file.downloaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 48px; color: var(--text-muted);">
+                        <i data-lucide="inbox" style="width: 48px; height: 48px; opacity: 0.2; margin-bottom: 16px; display: block; margin-left: auto; margin-right: auto;"></i>
+                        Nessun file scaricato.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

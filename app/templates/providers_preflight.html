@@ -4,37 +4,50 @@
 
 {% block content %}
 <div class="card">
-    <form action="/preflight" method="get" style="display: flex; gap: 15px; align-items: flex-end;">
+    <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="shield-check" style="color: var(--primary);"></i>
+        <h3 style="margin: 0;">Verifica Provider</h3>
+    </div>
+    <form action="/preflight" method="get" style="display: flex; gap: 16px; align-items: flex-end;">
         <div class="form-group" style="margin-bottom: 0; flex: 1;">
             <label>FQDN Dominio</label>
-            <input type="text" name="domain" class="form-control" value="{{ domain }}" placeholder="es. example.it">
+            <input type="text" name="domain" class="form-control mono" value="{{ domain }}" placeholder="es. example.it">
         </div>
-        <button type="submit" class="btn btn-primary">Esegui Preflight</button>
+        <button type="submit" class="btn btn-primary" style="height: 42px;">
+            <i data-lucide="play-circle"></i> Esegui Preflight
+        </button>
     </form>
 </div>
 
 {% if domain %}
-<div class="card">
-    <h3>Risultati Preflight per: {{ domain }}</h3>
-    <div style="margin-top: 20px;">
-        {% for provider, status in health.items() %}
-        <div class="provider-health" style="padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <strong style="font-size: 1.2rem; text-transform: capitalize;">{{ provider }}</strong>
-                {% if status.ready %}
-                    <span class="badge success" style="font-size: 1rem;">READY</span>
-                {% else %}
-                    <span class="badge danger" style="font-size: 1rem;">NOT READY</span>
+<div class="card" style="padding: 0; overflow: hidden; margin-top: 24px;">
+    <div style="padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--card-border);">
+        <h3 style="margin: 0;">Risultati Preflight per: <span class="mono" style="color: var(--primary);">{{ domain }}</span></h3>
+    </div>
+    <div style="padding: 24px;">
+        <div class="grid-2">
+            {% for provider, status in health.items() %}
+            <div class="provider-health" style="flex-direction: column; align-items: flex-start; padding: 20px; margin: 0; border-radius: var(--radius-md); border: 1px solid {% if status.ready %}rgba(16, 185, 129, 0.3){% else %}rgba(239, 68, 68, 0.3){% endif %}; background-color: {% if status.ready %}rgba(16, 185, 129, 0.05){% else %}rgba(239, 68, 68, 0.05){% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 16px;">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="server" style="color: var(--text-muted);"></i>
+                        <strong style="font-size: 1.2rem; text-transform: capitalize;">{{ provider }}</strong>
+                    </div>
+                    {% if status.ready %}
+                        <span class="badge success" style="font-size: 0.85rem; padding: 6px 12px;"><i data-lucide="check-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> READY</span>
+                    {% else %}
+                        <span class="badge danger" style="font-size: 0.85rem; padding: 6px 12px;"><i data-lucide="x-circle" style="width: 14px; height: 14px; margin-right: 4px;"></i> NOT READY</span>
+                    {% endif %}
+                </div>
+                <p style="margin-bottom: 0; font-size: 0.95rem;"><strong>Stato:</strong> {{ status.message }}</p>
+                {% if status.details %}
+                <div style="margin-top: 16px; padding: 16px; background-color: rgba(0,0,0,0.2); border-radius: var(--radius-sm); width: 100%; border: 1px solid var(--card-border);">
+                    <pre class="mono" style="margin: 0; font-size: 0.85rem; color: var(--text-muted); overflow-x: auto;">{{ status.details | tojson(indent=2) }}</pre>
+                </div>
                 {% endif %}
             </div>
-            <p><strong>Messaggio:</strong> {{ status.message }}</p>
-            {% if status.details %}
-            <div style="margin-top: 10px; padding: 10px; background-color: var(--bg-color); border-radius: 4px;">
-                <pre style="margin: 0; font-size: 0.85rem;">{{ status.details | tojson(indent=2) }}</pre>
-            </div>
-            {% endif %}
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endif %}

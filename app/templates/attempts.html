@@ -3,38 +3,50 @@
 {% block title %}Tentativi (Ultimi 100){% endblock %}
 
 {% block content %}
-<div class="card">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Campagna</th>
-                <th>Registrar</th>
-                <th>Timestamp</th>
-                <th>Esito</th>
-                <th>Latenza (ms)</th>
-                <th>Messaggio</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for attempt in attempts %}
-            <tr>
-                <td>{{ attempt.id }}</td>
-                <td>{{ attempt.campaign_id }}</td>
-                <td>{{ attempt.registrar_name }}</td>
-                <td>{{ attempt.attempted_at }}</td>
-                <td>
-                    {% if attempt.success %}
-                        <span class="badge success">OK</span>
-                    {% else %}
-                        <span class="badge danger">KO</span>
-                    {% endif %}
-                </td>
-                <td>{{ attempt.latency_ms }}</td>
-                <td>{{ attempt.message }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="card" style="padding: 0; overflow: hidden;">
+    <div style="padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--card-border);">
+        <div class="flex items-center gap-2">
+            <i data-lucide="activity" style="color: var(--primary);"></i>
+            <h3 style="margin: 0;">Log Tentativi</h3>
+        </div>
+    </div>
+    <div class="table-container" style="border: none; border-radius: 0;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Campagna</th>
+                    <th>Registrar</th>
+                    <th>Timestamp</th>
+                    <th>Esito</th>
+                    <th>Latenza (ms)</th>
+                    <th>Messaggio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr>
+                    <td class="mono" style="color: var(--text-muted);">#{{ attempt.id }}</td>
+                    <td class="mono" style="font-weight: 600;">#{{ attempt.campaign_id }}</td>
+                    <td class="mono" style="text-transform: capitalize;">{{ attempt.registrar_name }}</td>
+                    <td class="mono" style="font-size: 0.85rem;">{{ attempt.attempted_at }}</td>
+                    <td>
+                        {% if attempt.success %}
+                            <span class="badge success">OK</span>
+                        {% else %}
+                            <span class="badge danger">KO</span>
+                        {% endif %}
+                    </td>
+                    <td class="mono {% if attempt.latency_ms > 1000 %}text-danger{% endif %}">{{ attempt.latency_ms }}</td>
+                    <td style="font-size: 0.85rem; color: var(--text-muted); max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ attempt.message }}">{{ attempt.message }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">Nessun tentativo presente.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

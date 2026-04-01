@@ -3,40 +3,48 @@
 {% block title %}Campagne{% endblock %}
 
 {% block content %}
-<div class="card">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Domain ID</th>
-                <th>Stato</th>
-                <th>Inizio</th>
-                <th>Fine</th>
-                <th>Winner</th>
-                <th>Note</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for campaign in campaigns %}
-            <tr>
-                <td>{{ campaign.id }}</td>
-                <td>{{ campaign.domain_id }}</td>
-                <td>
-                    {% if campaign.status == 'SUCCESS' %}
-                        <span class="badge success">{{ campaign.status }}</span>
-                    {% elif campaign.status == 'LOST' %}
-                        <span class="badge danger">{{ campaign.status }}</span>
-                    {% else %}
-                        <span class="badge primary">{{ campaign.status }}</span>
-                    {% endif %}
-                </td>
-                <td>{{ campaign.started_at }}</td>
-                <td>{{ campaign.ended_at or '-' }}</td>
-                <td>{{ campaign.winner_registrar or '-' }}</td>
-                <td>{{ campaign.notes or '-' }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="card" style="padding: 0; overflow: hidden;">
+    <div style="padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--card-border);">
+        <div class="flex items-center gap-2">
+            <i data-lucide="rocket" style="color: var(--primary);"></i>
+            <h3 style="margin: 0;">Storico Campagne</h3>
+        </div>
+    </div>
+    <div class="table-container" style="border: none; border-radius: 0;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Domain ID</th>
+                    <th>Stato</th>
+                    <th>Inizio</th>
+                    <th>Fine</th>
+                    <th>Winner</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for campaign in campaigns %}
+                <tr>
+                    <td class="mono" style="color: var(--text-muted);">#{{ campaign.id }}</td>
+                    <td class="mono" style="font-weight: 600;">#{{ campaign.domain_id }}</td>
+                    <td>
+                        <span class="badge {% if campaign.status == 'SUCCESS' %}success{% elif campaign.status == 'LOST' %}danger{% else %}primary{% endif %}">
+                            {{ campaign.status }}
+                        </span>
+                    </td>
+                    <td class="mono" style="font-size: 0.85rem;">{{ campaign.started_at }}</td>
+                    <td class="mono" style="font-size: 0.85rem;">{{ campaign.ended_at or '-' }}</td>
+                    <td class="mono" style="text-transform: capitalize;">{{ campaign.winner_registrar or '-' }}</td>
+                    <td style="font-size: 0.9rem; color: var(--text-muted);">{{ campaign.notes or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 32px; color: var(--text-muted);">Nessuna campagna presente.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
