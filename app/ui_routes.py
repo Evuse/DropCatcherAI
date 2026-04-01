@@ -183,6 +183,63 @@ async def nicit_open_folder():
     service.open_download_folder()
     return RedirectResponse(url="/nicit", status_code=303)
 
+@router.get("/ai-analysis", response_class=HTMLResponse)
+async def ai_analysis_page(request: Request):
+    service = NicitService()
+    today_str = datetime.now().strftime("%Y%m%d")
+    merged_filename = f"{today_str}_merged.txt"
+    merged_filepath = os.path.join(settings.NICIT_DOWNLOAD_DIR, merged_filename)
+    
+    domains = []
+    if os.path.exists(merged_filepath):
+        with open(merged_filepath, "r", encoding="utf-8", errors="ignore") as f:
+            domains = [line.strip() for line in f if line.strip()]
+            
+    return templates.TemplateResponse("ai_analysis.html", {
+        "request": request,
+        "domains": domains,
+        "settings": settings,
+        "merged_filename": merged_filename,
+        "file_exists": os.path.exists(merged_filepath)
+    })
+
+@router.post("/ai-analysis/run")
+async def ai_analysis_run():
+    from google import genai
+    from fastapi import HTTPException
+    
+    if not settings.GEMINI_API_KEY:
+        raise HTTPException(status_code=400, detail="Gemini API Key non configurata nelle impostazioni.")
+        
+    today_str = datetime.now().strftime("%Y%m%d")
+    merged_filename = f"{today_str}_merged.txt"
+    merged_filepath = os.path.join(settings.NICIT_DOWNLOAD_DIR, merged_filename)
+    
+    if not os.path.exists(merged_filepath):
+        raise HTTPException(status_code=404, detail="File dei domini uniti non trovato. Scaricalo dalla sezione NIC.IT.")
+        
+    domains = []
+    with open(merged_filepath, "r", encoding="utf-8", errors="ignore") as f:
+        domains = [line.strip() for line in f if line.strip()]
+        
+    if not domains:
+        raise HTTPException(status_code=400, detail="Il file dei domini è vuoto.")
+        
+    try:
+        client = genai.Client(api_key=settings.GEMINI_API_KEY)
+        
+        # Costruisci il prompt combinando le istruzioni dell'utente con la lista dei domini
+        prompt = f"{settings.GEMINI_PROMPT}\n\nLista dei domini:\n" + "\n".join(domains)
+        
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+        )
+        
+        return {"result": response.text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Errore durante l'analisi AI: {str(e)}")
+
 @router.get("/settings", response_class=HTMLResponse)
 async def settings_page(request: Request):
     return templates.TemplateResponse("settings.html", {
@@ -221,6 +278,12 @@ async def settings_update(request: Request):
     for cb in checkboxes:
         if cb not in form_data:
             env_vars[cb] = "false"
+
+    # Add GEMINI settings if they are in form_data
+    if "GEMINI_API_KEY" in form_data:
+        env_vars["GEMINI_API_KEY"] = f'"{form_data["GEMINI_API_KEY"]}"'
+    if "GEMINI_PROMPT" in form_data:
+        env_vars["GEMINI_PROMPT"] = f'"{form_data["GEMINI_PROMPT"]}"'
 
     # Write back to .env
     with open(env_path, "w") as f:

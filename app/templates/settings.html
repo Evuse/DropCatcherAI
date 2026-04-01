@@ -131,6 +131,21 @@
             </div>
         </div>
 
+        <div style="background: var(--bg-color); padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--card-border); margin-bottom: 24px;">
+            <div class="flex items-center gap-2 mb-4">
+                <i data-lucide="sparkles" style="color: var(--primary);"></i>
+                <h3 style="margin: 0; font-size: 1.1rem;">AI Analysis (Gemini)</h3>
+            </div>
+            <div class="form-group">
+                <label>Gemini API Key</label>
+                <input type="password" name="GEMINI_API_KEY" class="form-control mono" value="{{ settings.GEMINI_API_KEY }}">
+            </div>
+            <div class="form-group">
+                <label>Prompt di Analisi</label>
+                <textarea name="GEMINI_PROMPT" class="form-control" rows="4">{{ settings.GEMINI_PROMPT }}</textarea>
+            </div>
+        </div>
+
         <div style="margin-top: 32px; display: flex; flex-direction: column; align-items: center; border-top: 1px solid var(--card-border); padding-top: 24px;">
             <button type="submit" class="btn btn-primary" style="padding: 12px 32px; font-size: 1.1rem;">
                 <i data-lucide="save"></i> Salva nel .env

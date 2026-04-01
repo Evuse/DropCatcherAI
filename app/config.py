@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     GANDI_ORGANIZATION_ID: str = ""
     GANDI_IT_CONTACT_CONFIRMED: bool = False
 
+    GEMINI_API_KEY: str = ""
+    GEMINI_PROMPT: str = "Analizza la seguente lista di domini e restituisci quelli che hanno più valore dal punto di vista commerciale, di significato, o perché particolarmente corti. Spiega brevemente il motivo per ciascuno."
+
     model_config = SettingsConfigDict(
         env_file=get_env_path(), 
         env_file_encoding='utf-8',
